@@ -1,0 +1,12 @@
+{"topic":"courses","key":"c-102","value":{"type":"COURSE_PUBLISHED","payload":{"id":"c-102","title":"Intro to Kafka 2"},"ts":1763236065745},"ts":1763236081862}
+{"topic":"courses","key":"c-101","value":{"type":"COURSE_PUBLISHED","payload":{"id":"c-101","title":"Intro to Kafka"},"ts":1763236076841},"ts":1763236081863}
+{"topic":"activities","key":"u-2:c-101","value":{"userId":"u-2","courseId":"c-101","type":"VIDEO_WATCHED","details":{"percent":80},"ts":1763236091831},"ts":1763236091839}
+{"topic":"activities","key":"u-2:c-101","value":{"userId":"u-2","courseId":"c-101","type":"QUIZ_SUBMITTED","details":{"percent":80},"ts":1763236129721},"ts":1763236129725}
+{"topic":"activities","key":"u-2:c-101","value":{"userId":"u-2","courseId":"c-101","type":"QUIZ_SUBMITTED","details":{"percent":90},"ts":1763236236717},"ts":1763236236724}
+{"topic":"activities","key":"u-2:c-101","value":{"userId":"u-2","courseId":"c-101","type":"QUIZ_SUBMITTED","details":{"percent":90},"ts":1763236307640},"ts":1763236307643}
+{"topic":"activities","key":"u-2:c-101","value":{"userId":"u-2","courseId":"c-101","type":"QUIZ_SUBMITTED","details":{"percent":90},"ts":1763236375279},"ts":1763236375282}
+{"topic":"courses","key":"c-101","value":{"type":"COURSE_PUBLISHED","payload":{"id":"c-101","title":"Intro to Kafka"},"ts":1763236458815},"ts":1763236458842}
+{"topic":"courses","key":"c-102","value":{"type":"COURSE_PUBLISHED","payload":{"id":"c-102","title":"Intro to Kafka"},"ts":1763236465006},"ts":1763236465010}
+{"topic":"activities","key":"u-2:c-101","value":{"userId":"u-2","courseId":"c-101","type":"QUIZ_SUBMITTED","details":{"percent":90},"ts":1763236476884},"ts":1763236476891}
+{"topic":"activities","key":"u-2:c-101","value":{"userId":"u-2","courseId":"c-101","type":"VIDEO_WATCHED","details":{"percent":80},"ts":1763236494171},"ts":1763236494175}
+{"topic":"certificates","key":"u-2:c-101","value":{"userId":"u-2","courseId":"c-101","issuedAt":1763236494176},"ts":1763236494189}

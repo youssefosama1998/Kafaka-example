@@ -1,14 +1,24 @@
 version: "3.8"
+
 services:
+  # -----------------------------
+  # Zookeeper
+  # -----------------------------
   zookeeper:
+    container_name: zookeeper
     image: confluentinc/cp-zookeeper:7.4.0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    restart: unless-stopped
 
+  # -----------------------------
+  # Kafka broker
+  # -----------------------------
   kafka:
+    container_name: kafka
     image: confluentinc/cp-kafka:7.4.0
     depends_on:
       - zookeeper
@@ -21,40 +31,153 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    restart: unless-stopped
 
-  course-service:
-    build: ./services/course-service
-    depends_on:
-      - kafka
-    environment:
-      KAFKA_BROKER: kafka:9092
+  # -----------------------------
+  # Course Service (Producer)
+  # -----------------------------
+#  course-service:
+#    container_name: course-service
+#    image: node:18-alpine
+#    depends_on:
+#      - kafka
+#    environment:
+#      KAFKA_BROKER: kafka:9092
+#    working_dir: /app
+#    volumes:
+#      - ./kafka-lms-example/services/course-service:/app
+#      - ./kafka-lms-example/services/common:/app/common
+#    command: sh -c "npm install && node producer.js"
+#    restart: unless-stopped
 
-  enrollment-service:
-    build: ./services/enrollment-service
-    depends_on:
-      - kafka
-    environment:
-      KAFKA_BROKER: kafka:9092
+  # -----------------------------
+  # Enrollment Service (Producer)
+  # -----------------------------
+#  enrollment-service:
+#    container_name: enrollment-service
+#    image: node:18-alpine
+#    depends_on:
+#      - kafka
+#    environment:
+#      KAFKA_BROKER: kafka:9092
+#    working_dir: /app
+#    volumes:
+#      - ./kafka-lms-example/services/enrollment-service:/app
+#      - ./kafka-lms-example/services/common:/app/common
+#    command: sh -c "npm install && node producer.js"
+#    restart: unless-stopped
 
-  activity-service:
-    build: ./services/activity-service
-    depends_on:
-      - kafka
-    environment:
-      KAFKA_BROKER: kafka:9092
+  # -----------------------------
+  # Activity Service (Producer)
+  # -----------------------------
+#  activity-service:
+#    container_name: activity-service
+#    image: node:18-alpine
+#    depends_on:
+#      - kafka
+#    environment:
+#      KAFKA_BROKER: kafka:9092
+#    working_dir: /app
+#    volumes:
+#      - ./kafka-lms-example/services/activity-service:/app
+#      - ./kafka-lms-example/services/common:/app/common
+#    command: sh -c "npm install && node producer.js"
+#    restart: unless-stopped
 
+  # -----------------------------
+  # Certifier Service (Processor)
+  # -----------------------------
   certifier:
-    build: ./services/certifier
+    container_name: certifier
+    image: node:18-alpine
     depends_on:
       - kafka
     environment:
       KAFKA_BROKER: kafka:9092
-
-  analytics-service:
-    build: ./services/analytics-service
-    depends_on:
-      - kafka
+    working_dir: /app
     volumes:
-      - ./data-lake.json:/app/data-lake.json
+      - ./kafka-lms-example/services/certifier:/app
+      - ./kafka-lms-example/services/common:/app/common
+    command: sh -c "npm install && node processor.js"
+    restart: unless-stopped
+
+
+  # -----------------------------
+  # APi Gateway
+  # -----------------------------
+  api-gateway:
+      container_name: api-gateway
+      image: node:18-alpine
+      depends_on:
+        - kafka
+      environment:
+        KAFKA_BROKER: kafka:9092
+      working_dir: /app
+      volumes:
+        - ./kafka-lms-example/services/api-gateway:/app
+        - ./kafka-lms-example/services/common:/app/common
+      command: sh -c "npm install && node server.js"
+      ports:
+        - "8088:8088"
+      restart: unless-stopped
+
+  # -----------------------------
+  # Analytics Service (Consumer)
+  # -----------------------------
+  analytics-service:
+    container_name: analytics-service
+    image: node:18-alpine
+    depends_on:
+      - kafka
     environment:
       KAFKA_BROKER: kafka:9092
+    working_dir: /app
+    volumes:
+      - ./kafka-lms-example/services/analytics-service:/app
+      - ./kafka-lms-example/services/common:/app/common
+      - ./kafka-lms-example/data/data-lake.json:/app/data-lake.json
+    command: sh -c "npm install && node consumer.js"
+    restart: unless-stopped
+
+  # -----------------------------
+  # Kafka UI
+  # -----------------------------
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+    depends_on:
+      - kafka
+    restart: unless-stopped
+
+  # -----------------------------
+  # Prometheus
+  # -----------------------------
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+
+  # -----------------------------
+  # Grafana
+  # -----------------------------
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    restart: unless-stopped

@@ -1,4 +1,4 @@
-import { getKafka } from "../common/kafkaClient.js";
+import { getKafka } from "./common/kafkaClient.js";
 const kafka = getKafka();
 const producer = kafka.producer();
 
@@ -21,7 +21,7 @@ async function run() {
       details:
         act === "VIDEO_WATCHED"
           ? { percent: Math.floor(Math.random() * 100) }
-          : { score: Math.floor(Math.random() * 100) },
+          : { percent: Math.floor(Math.random() * 100) },
       ts: Date.now(),
     };
     await producer.send({

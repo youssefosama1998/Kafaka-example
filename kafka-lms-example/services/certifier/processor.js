@@ -1,4 +1,4 @@
-import { getKafka } from "../common/kafkaClient.js";
+import { getKafka } from "./common/kafkaClient.js";
 const kafka = getKafka();
 const consumer = kafka.consumer({ groupId: "certifier-group" });
 const producer = kafka.producer();
@@ -21,16 +21,19 @@ async function run() {
       const entry = state.get(id) || { watched: false, quiz: 0, completed: false };
 
       if (topic === "activities") {
-        if (value.type === "VIDEO_WATCHED" && value.details.percent >= 100) {
+        if (value.type === "VIDEO_WATCHED" && value.details.percent >= 80) {
           entry.watched = true;
         } else if (value.type === "QUIZ_SUBMITTED") {
-          entry.quiz = value.details.score;
+          entry.quiz = value.details.percent;
         }
       } else if (topic === "enrollments" && value.action === "COMPLETE") {
         entry.completed = true;
       }
+      console.log('--------------------------------------> entryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy <------------------------------------');
+      console.log(entry);
+      console.log('--------------------------------------> entryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy <------------------------------------');
 
-      if ((entry.watched && entry.quiz >= 90) || entry.completed) {
+      if ((entry.watched && entry.quiz >= 80) || entry.completed) {
         const cert = {
           userId: value.userId,
           courseId: value.courseId,

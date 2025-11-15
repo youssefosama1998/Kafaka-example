@@ -1,0 +1,16 @@
+# Ignore all node_modules in any subfolder
+**/node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+
+# OS files
+.DS_Store
+
+# Docker overrides (optional)
+docker-compose.override.yml
