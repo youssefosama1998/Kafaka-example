@@ -25,33 +25,33 @@ kafka-lms-example/
 ├── services/
 │   ├── api-gateway/           # HTTP API for manual event production
 │   │   ├── server.js
-│   │   ├── package.json
-│   │   └── Dockerfile
+│   │   └── package.json
+│   │   
 │   │
 │   ├── course-service/        # Automated course event producer (optional)
 │   │   ├── producer.js
-│   │   ├── package.json
-│   │   └── Dockerfile
+│   │   └── package.json
+│   │   
 │   │
 │   ├── enrollment-service/    # Automated enrollment producer (optional)
 │   │   ├── producer.js
-│   │   ├── package.json
-│   │   └── Dockerfile
+│   │   └── package.json
+│   │   
 │   │
 │   ├── activity-service/      # Automated activity producer (optional)
 │   │   ├── producer.js
-│   │   ├── package.json
-│   │   └── Dockerfile
+│   │   └── package.json
+│   │   
 │   │
 │   ├── certifier/             # Certificate issuance processor
 │   │   ├── processor.js
-│   │   ├── package.json
-│   │   └── Dockerfile
+│   │   └── package.json
+│   │   
 │   │
 │   ├── analytics-service/     # Event consumer for analytics
 │   │   ├── consumer.js
-│   │   ├── package.json
-│   │   └── Dockerfile
+│   │   └── package.json
+│   │   
 │   │
 │   └── common/                # Shared Kafka client utilities
 │       ├── kafka-client.js
